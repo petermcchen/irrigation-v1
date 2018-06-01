@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <!-- TODO: Irrigation -->
+    <color name="irrigation_text_gray">#e8e8e8</color>
+    <color name="irrigation_text_blue">#3CB1E6</color>
+    <color name="irrigation_title_blue">#3EAFE9</color>
+    <color name="irrigation_about_version">#3CB1E6</color>>
+    <color name="irrigation_about_link">#4B4B4B</color>>
+    <color name="irrigation_about_copyright">#4B4B4B</color>
+
+    <color name="irrigation_background_start">#4DB6AC</color>
+    <color name="irrigation_background_end">#00695C</color>
+    <color name="irrigation_actionbar_start">#FBFBFB</color>
+    <color name="irrigation_actionbar_end">#C0C0C0</color>
+</resources>

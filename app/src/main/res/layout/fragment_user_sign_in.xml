@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_invert_gradlient"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="24dp"
+        android:paddingLeft="36dp"
+        android:paddingRight="36dp">
+
+        <ImageView
+            android:src="@drawable/icon_signin_large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:layout_gravity="center_horizontal" />
+
+        <!-- Name Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/irrigation_text_gray"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="2dp">
+
+            <EditText
+                android:id="@+id/sign_input_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/irrigation_text_gray"
+                android:inputType="textPersonName"
+                android:hint="@string/user_name"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <!-- Password Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/irrigation_text_gray"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="8dp">
+
+            <EditText
+                android:id="@+id/sign_input_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/irrigation_text_gray"
+                android:inputType="textPassword"
+                android:hint="@string/user_password"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/button_sign_in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/user_sign_in"
+            android:textColor="@drawable/button_selector"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:background="@drawable/button_small" />
+
+        <TextView android:id="@+id/link_forgetpwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="@string/user_forgetpwd_text"
+            android:textColor="@color/irrigation_text_gray"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    </LinearLayout>
+</ScrollView>
