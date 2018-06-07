@@ -41,12 +41,11 @@ public class DeviceListFragment extends ListFragment implements DeviceListAdapte
 
     public interface OnSelectionListener
     {
-        void onAddDevice();
-        void onRefreshDevice();
+        //void onAddDevice();
+        //void onRefreshDevice();
         void onShowDevice(int index, boolean fullScreen);
-        void onDeleteDevice(int index);
-        void onOwnerDeleteDevice(int index, int member_count);
-        void onRenameDevice(int index);
+        //void onDeleteDevice(int index);
+        //void onRenameDevice(int index);
     }
 
     private static final int MENU_RENAME = 2;
@@ -119,7 +118,7 @@ public class DeviceListFragment extends ListFragment implements DeviceListAdapte
 
         super.onStart();
 
-        EventBus.getDefault().register(this);
+        //EventBus.getDefault().register(this);
     }
 
     @Override
@@ -128,7 +127,7 @@ public class DeviceListFragment extends ListFragment implements DeviceListAdapte
         if(DEBUG)
             Log.d(TAG, "onStop");
 
-        EventBus.getDefault().unregister(this);
+        //EventBus.getDefault().unregister(this);
 
         super.onStop();
     }
@@ -204,13 +203,13 @@ public class DeviceListFragment extends ListFragment implements DeviceListAdapte
 
         if(id == R.id.action_device_new)
         {
-            if(mListener!=null)
-                mListener.onAddDevice();
+            //if(mListener!=null)
+            //    mListener.onAddDevice();
         }
         else if(id == R.id.action_device_refresh)
         {
-            if(mListener!=null)
-                mListener.onRefreshDevice();
+            //if(mListener!=null)
+            //    mListener.onRefreshDevice();
         }
 
         return true;
@@ -306,14 +305,14 @@ public class DeviceListFragment extends ListFragment implements DeviceListAdapte
 
         if(id == MENU_RENAME)
         {
-            if(mListener!=null)
-                mListener.onRenameDevice(mSelectedDevice);
+            //if(mListener!=null)
+            //    mListener.onRenameDevice(mSelectedDevice);
         }
         else if(id == MENU_DELETE)
         {
-            if(mListener!=null) {
-                mListener.onDeleteDevice(mSelectedDevice);
-            }
+            //if(mListener!=null) {
+            //    mListener.onDeleteDevice(mSelectedDevice);
+            //}
         }
 
         mSelectedDevice = -1;
@@ -396,19 +395,19 @@ public class DeviceListFragment extends ListFragment implements DeviceListAdapte
     // TODO...
     private void loadDeviceList()
     {
-    //    if(DEBUG)
-    //        Log.d(TAG, "loadDeviceList n:" + MainApplication.getWaltzDeviceNumber());
+        if(DEBUG)
+            Log.d(TAG, "loadDeviceList n:" + MainApplication.getSensorDeviceNumber());
 
-    //    mDeviceList.clear();
+        mDeviceList.clear();
 
-    //    for(int i=0; i<MainApplication.getWaltzDeviceNumber(); i++)
-    //    {
-    //        SensorDevice device = MainApplication.getWaltzDevice(i);
-    //        mDeviceList.add(device);
-    //    }
+        for(int i=0; i<MainApplication.getSensorDeviceNumber(); i++)
+        {
+            SensorDevice device = MainApplication.getSensorDevice(i);
+            mDeviceList.add(device);
+        }
 
-    //    if(mAdapter!=null)
-    //        mAdapter.notifyDataSetChanged();
+        if(mAdapter!=null)
+            mAdapter.notifyDataSetChanged();
     }
 
     public void updateAllItem()

@@ -19,11 +19,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.accton.iot.irrigationv1.fragment.AboutFragment;
+import com.accton.iot.irrigationv1.fragment.DeviceListFragment;
 import com.accton.iot.irrigationv1.fragment.UserSignInFragment;
 import com.accton.iot.irrigationv1.management.user.UserManager;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, UserSignInFragment.OnSignInListener {
+        implements NavigationView.OnNavigationItemSelectedListener, UserSignInFragment.OnSignInListener, DeviceListFragment.OnSelectionListener {
     private final static String TAG = "MainActivity";
     private final static boolean DEBUG = true;
     // Navigation Drawer
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity
     private FragmentManager mFragmentManager;
     private AboutFragment mAboutFragment;
     private UserSignInFragment mUserSignInFragment;
+    private DeviceListFragment mDeviceListFragment;
 
     private void setupLayout() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -51,15 +53,22 @@ public class MainActivity extends AppCompatActivity
 
         // Create Fragment  instances
         mAboutFragment = new AboutFragment();
+
         mUserSignInFragment = new UserSignInFragment();
         mUserSignInFragment.setToolbar(mToolbar);
         mUserSignInFragment.setOnSignInListener(this);
 
+        mDeviceListFragment = new DeviceListFragment();
+        mDeviceListFragment.setToolbar(mToolbar);
+        mDeviceListFragment.setOnSelectionListener(this);
+
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.container, mAboutFragment);
         fragmentTransaction.add(R.id.container, mUserSignInFragment);
+        fragmentTransaction.add(R.id.container, mDeviceListFragment);
         fragmentTransaction.hide(mAboutFragment);
         fragmentTransaction.hide(mUserSignInFragment);
+        fragmentTransaction.hide(mDeviceListFragment);
         fragmentTransaction.commit();
     }
 
@@ -94,6 +103,7 @@ public class MainActivity extends AppCompatActivity
 
         fragmentTransaction.hide(mUserSignInFragment);
         fragmentTransaction.hide(mAboutFragment);
+        fragmentTransaction.hide(mDeviceListFragment);
 
         fragmentTransaction.commit();
     }
@@ -110,6 +120,20 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.commit();
 
         mToolbar.setTitle(R.string.title_about);
+    }
+
+    private void showDeviceList()
+    {
+        if(DEBUG)
+            Log.d(TAG, "showDeviceList");
+
+        hideAllFragments();
+
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.show(mDeviceListFragment);
+        fragmentTransaction.commit();
+
+        mToolbar.setTitle(R.string.title_device);
     }
 
     private void showUserSignIn()
@@ -288,7 +312,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_plant) {
             hideAllFragments();
         } else if (id == R.id.nav_device) {
-            hideAllFragments();
+            showDeviceList();
         } else if (id == R.id.nav_signin) {
             showUserSignIn();
         } else if (id == R.id.nav_signout) {
@@ -335,5 +359,11 @@ public class MainActivity extends AppCompatActivity
     public void onResetPasswordTimeOut(String errorMessage) {
         if (DEBUG)
             Log.d(TAG, "onForgetPassword");
+    }
+
+    @Override
+    public void onShowDevice(int index, boolean fullScreen) {
+        if(DEBUG)
+            Log.d(TAG, "onShowDevice i:" + index);
     }
 }

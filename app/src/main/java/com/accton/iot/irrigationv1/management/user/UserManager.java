@@ -393,4 +393,24 @@ public class UserManager {
     {
         return mErrorMessage;
     }
+
+    public int getSensorDeviceNumber() {
+        if(DEBUG)
+            Log.d(TAG, "getSensorDeviceNumber");
+        int value = -1;
+        if (mDeviceInfoList != null)
+            value = mDeviceInfoList.size();
+        return value;
+    }
+
+    public SensorDevice getSensorDevice(int index)
+    {
+        if(DEBUG)
+            Log.d(TAG, "getSensorDeviceNumber");
+        SensorDevice mDevice = null;
+        if (mDeviceInfoList != null) {
+            mDevice = mDeviceInfoList.get(index);
+        }
+        return mDevice;
+    }
 }

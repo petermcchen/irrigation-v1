@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.util.Log;
 
+import com.accton.iot.irrigationv1.management.device.SensorDevice;
+import com.accton.iot.irrigationv1.management.device.SensorDeviceManager;
 import com.accton.iot.irrigationv1.management.user.UserManager;
 
 public class MainApplication extends Application {
@@ -15,6 +17,7 @@ public class MainApplication extends Application {
     private static MainApplication mInstance = null;
     private static Context mContext;
     private static UserManager mUserManager = new UserManager();
+    private static SensorDeviceManager mDeviceManager;
 
     public MainApplication() {
         super();
@@ -31,6 +34,7 @@ public class MainApplication extends Application {
 
         mInstance = this;
         mContext = getApplicationContext();
+        mDeviceManager = new SensorDeviceManager();
     }
 
     @Override
@@ -81,5 +85,15 @@ public class MainApplication extends Application {
     public static UserManager getUserManager()
     {
         return mUserManager;
+    }
+
+    public static int getSensorDeviceNumber()
+    {
+        return mUserManager.getSensorDeviceNumber();
+    }
+
+    public static SensorDevice getSensorDevice(int index)
+    {
+        return mUserManager.getSensorDevice(index);
     }
 }
