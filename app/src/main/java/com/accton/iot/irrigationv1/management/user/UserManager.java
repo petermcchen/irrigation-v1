@@ -2,17 +2,25 @@ package com.accton.iot.irrigationv1.management.user;
 
 import android.util.Log;
 
+import com.accton.iot.irrigationv1.management.device.SensorDevice;
 import com.accton.iot.irrigationv1.management.user.api.UserRestCommand;
 import com.accton.iot.irrigationv1.management.user.response.CreateUserSessionResponse;
 import com.accton.iot.irrigationv1.management.user.response.DestroySessionResponse;
-import com.accton.iot.irrigationv1.management.user.response.DestroySessionResponse;
+import com.accton.iot.irrigationv1.management.user.response.DeviceQueryResponse;
+import com.accton.iot.irrigationv1.management.user.response.SensorArrayData;
+import com.accton.iot.irrigationv1.management.user.response.SensorData;
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Response;
 import retrofit2.adapter.rxjava.HttpException;
+import rx.Observable;
 import rx.schedulers.Schedulers;
 
 public class UserManager {
@@ -33,9 +41,12 @@ public class UserManager {
     private boolean mResetUserPasswordDone = false;
     private String mSessionID = null;
     private int mUserNo = -1;
+    private int mCustomerUserNo = -1;
 
     private int mError = -1;
     private String mErrorMessage = "TBD...";
+
+    private List<SensorDevice> mDeviceInfoList = new ArrayList<SensorDevice>();
 
     private void setError(Throwable throwable)
     {
@@ -82,6 +93,37 @@ public class UserManager {
         }
     }
 
+    private void addDeviceInfo(int sno, int gno, int live, int type, String sid, String desc)
+    {
+        if (DEBUG)
+            Log.d(TAG, "addDeviceInfo sno:" + sno + " gid:" + gno + " type:" + type + " sid: " + sid);
+        if (DEBUG)
+            Log.d(TAG, "addDeviceInfo desc: " + desc);
+
+        SensorDevice deviceInfo = new SensorDevice();
+
+        deviceInfo.setSensorNo(sno);
+        deviceInfo.setSensorId(sid);
+        deviceInfo.setGatewayId(gno);
+        deviceInfo.setSensorType(type);
+
+        mDeviceInfoList.add(deviceInfo);
+    }
+
+    private void queryDevices()
+    {
+        if (DEBUG)
+            Log.d(TAG, "queryDevices" + ", sid: " + mSessionID + ", uid: " + mUserNo + ", cid: " + mCustomerUserNo);
+
+        mDeviceInfoList.clear();
+
+        mRestCommand.deviceQuery(ganerateTransactionID(), mSessionID, mUserNo, mCustomerUserNo, "")
+                .subscribeOn(Schedulers.newThread())
+                //.flatMap(device -> Observable.from(device))
+                .doOnCompleted(() -> {})
+                .subscribe(response -> saveDeviceQueryResponse(response), response -> setError(response));
+    }
+
     private void signInSuccess()
     {
         if (DEBUG)
@@ -89,6 +131,8 @@ public class UserManager {
 
         mSignInDone = true;
         mSignInSuccess = true;
+
+        queryDevices();
     }
 
     private void signInFail(Throwable throwable)
@@ -104,6 +148,12 @@ public class UserManager {
         mPassword = null;
 
         setError(throwable);
+    }
+
+    private void onCompleted()
+    {
+        if (DEBUG)
+            Log.d(TAG, "onCompleted");
     }
 
     public UserManager()
@@ -161,7 +211,11 @@ public class UserManager {
                     Log.d(TAG, "saveSession, signin failed");
             } else {
                 mSessionID = obj.getString("SessionID");
-                mUserNo = 3; // TODO... FixedMe
+                mUserNo = obj.getJSONObject("data").getInt("role_no");
+                mCustomerUserNo = obj.getJSONObject("data").getInt("customer_user_no");
+                //mUserNo = 3; // FixedMe => done.
+                if (DEBUG)
+                    Log.d(TAG, "mSessionID: " + mSessionID + ", mUserNo: " + mUserNo + ", customer: " + mCustomerUserNo);
                 signInSuccess();
             }
         } catch (JSONException e) {
@@ -176,6 +230,39 @@ public class UserManager {
         String theResponse = gson.toJson(rsp, DestroySessionResponse.class);
         if (DEBUG)
             Log.d(TAG, "printDestroySessionResponse, rsp: " + theResponse.toString());
+    }
+
+    private void saveDeviceQueryResponse(DeviceQueryResponse rsp) {
+        Gson gson = new Gson();
+        String theResponse = gson.toJson(rsp, DeviceQueryResponse.class);
+        try {
+            JSONObject obj = new JSONObject(theResponse);
+            if (obj.getInt("error_code") != 1001) {
+                if (DEBUG)
+                    Log.d(TAG, "printDeviceQueryResponse, request failed");
+            } else {
+                int mSensorNo = obj.getJSONObject("data").getInt("num");
+                if (DEBUG)
+                    Log.d(TAG, "mSensorNo: " + mSensorNo);
+                JSONArray mSensorArray = obj.getJSONObject("data").getJSONArray("body");
+                if (DEBUG)
+                    Log.d(TAG, "sensors.length(): " + mSensorArray.length());
+                for (int i = 0; i < mSensorArray.length(); i++) {
+                    JSONObject mSensor = mSensorArray.getJSONObject(i);
+                    if (DEBUG)
+                        Log.d(TAG, "sensor_id: " + mSensor.getString("sensor_id"));
+
+                    addDeviceInfo(mSensor.getInt("sensor_no"),
+                            mSensor.getInt("gateway_no"),
+                            mSensor.getInt("is_live"),
+                            mSensor.getInt("sensor_type"),
+                            mSensor.getString("sensor_id"),
+                            mSensor.getString("sensor_desc") );
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean isInitialized()
@@ -207,7 +294,7 @@ public class UserManager {
         mRestCommand.dismissUserAuthentication(ganerateTransactionID(), mSessionID, mUserNo)
                 .subscribeOn(Schedulers.newThread())
                 //.doOnCompleted(() -> signInSuccess())
-                .doOnCompleted(() -> {})
+                .doOnCompleted(() -> onCompleted())
                 .subscribe(response -> printDestroySessionResponse(response), response -> setError(response));
 
         mSignInDone = false;
@@ -230,7 +317,6 @@ public class UserManager {
 
         //mDeviceInfoList.clear();
 
-
         mUsername = user;
         mEmail = email;
         mPassword = password;
@@ -240,7 +326,7 @@ public class UserManager {
         mRestCommand.grantUserAuthentication(ganerateTransactionID(), email, password)
                 .subscribeOn(Schedulers.newThread())
                 //.doOnCompleted(() -> signInSuccess())
-                .doOnCompleted(() -> {}) // TODO... not really successful, must check response error_code.
+                .doOnCompleted(() -> onCompleted()) // TODO... not really successful, must check response error_code.
                 .subscribe(response -> saveSession(response), response -> signInFail(response));
                 //.doOnCompleted(() -> queryDevices())
                 //.subscribe(response -> setToken(response.usertoken, response.accesstoken), response -> signInFail(response));

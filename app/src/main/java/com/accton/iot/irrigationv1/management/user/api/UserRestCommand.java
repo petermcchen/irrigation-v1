@@ -9,6 +9,7 @@ import com.accton.iot.irrigationv1.management.user.request.CreateUserSessionRequ
 //import com.accton.iot.irrigationv1.management.user.request.UserResetPasswordRequest;
 import com.accton.iot.irrigationv1.management.user.response.CreateUserSessionResponse;
 import com.accton.iot.irrigationv1.management.user.response.DestroySessionResponse;
+import com.accton.iot.irrigationv1.management.user.response.DeviceQueryResponse;
 //import com.accton.iot.irrigationv1.management.user.response.DeviceQueryResponse;
 //import com.accton.iot.irrigationv1.management.user.response.UserQueryResponse; // Add Device's member list
 //import com.accton.iot.irrigationv1.management.user.request.UserUpdateScopeRequest; // Update Device's member scope
@@ -107,10 +108,10 @@ public class UserRestCommand
         @FormUrlEncoded
         @POST("/WS_Services.php?mod=LoginManager&csm=REST")
         Observable<DestroySessionResponse> delAuthentication(@Field("func") String func,
-                                                                 @Field("TransactionID") String tid,
-                                                                 @Field("SessionID") String sid,
-                                                                 @Field("RoleLevel") int level,
-                                                                 @Field("RoleNo") int user);
+                                                             @Field("TransactionID") String tid,
+                                                             @Field("SessionID") String sid,
+                                                             @Field("RoleLevel") int level,
+                                                             @Field("RoleNo") int user);
 
         //@POST("/um/users/password") // Reset user password
         //Observable<ResponseBody> userResetPassword(@Body UserResetPasswordRequest body);
@@ -118,8 +119,15 @@ public class UserRestCommand
         //@PUT("/um/users/password")
         //Observable<String> userChangePassword(@Body UserChangePasswordRequest body);
 
-        //@GET("/dm/devices")
-        //Observable<List<DeviceQueryResponse>> deviceQuery(@Query("usertoken") String usertoken);
+        @FormUrlEncoded
+        @POST("/WS_Services.php?mod=SensorManager&csm=REST")
+        Observable<DeviceQueryResponse> deviceQuery(@Field("func") String func,
+                                                    @Field("TransactionID") String tid,
+                                                    @Field("SessionID") String sid,
+                                                    @Field("RoleLevel") int level,
+                                                    @Field("RoleNo") int user,
+                                                    @Field("CustomerUserNo") int customer,
+                                                    @Field("SensorType") String type);
 
         //@GET("/dm/devices/{id}/account") // Add Device's member list
         //Observable<List<UserQueryResponse>> userQuery(@Path("id") int deviceId, @Query("usertoken") String userToken);
@@ -232,10 +240,10 @@ public class UserRestCommand
     //    return mRestfulService.userChangePassword(new UserChangePasswordRequest(credential, accessid, password));
     //}
 
-    //public Observable<List<DeviceQueryResponse>> deviceQuery(String userToken)
-    //{
-    //    return mRestfulService.deviceQuery(userToken);
-    //}
+    public Observable<DeviceQueryResponse> deviceQuery(String tid, String sid, int roleno, int customer, String type)
+    {
+        return mRestfulService.deviceQuery("QuerySensorsByUser", tid, sid, 1, roleno, customer, type);
+    }
 
     //public Observable<List<UserQueryResponse>> userQuery(int deviceId, String userToken) // Add Device's member list
     //{
@@ -275,7 +283,7 @@ public class UserRestCommand
     //    return mRestfulService.updateDeviceName(deviceId, new UserUpdateDeviceNameRequest(usertoken, devicename));
     //}
 
-    // TODO, [Anonymous User], new api for application.
+    // [Anonymous User], new api for application.
     //public Observable<UserQueryDeviceIdResponse> userQueryDeviceId(String mac, String sno) // User query device id
     //{
     //    if(DEBUG)

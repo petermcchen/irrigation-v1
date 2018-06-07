@@ -38,4 +38,11 @@
     <string name="quit">Quit</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <!-- TODO: popup menu text -->
+    <string name="menu_refresh">Refresh</string>
+    <string name="menu_zoom">Zoom</string>
+    <string name="menu_setting">Setting</string>
+    <string name="menu_new">New</string>
+    <string name="menu_rename">Rename</string>
+    <string name="menu_remove">Remove</string>
 </resources>
