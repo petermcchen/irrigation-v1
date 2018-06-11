@@ -26,6 +26,7 @@ import com.accton.iot.irrigationv1.adapter.DeviceListAdapter;
 //import com.accton.iot.irrigationv1.event.DeviceNumberChangedEvent;
 //import com.accton.iot.irrigationv1.event.user.UserQueryDeviceIdDoneEvent;
 //import com.accton.iot.irrigationv1.event.user.UserQueryDoneEvent;
+import com.accton.iot.irrigationv1.event.DeviceNumberChangedEvent;
 import com.accton.iot.irrigationv1.management.device.SensorDevice;
 //import com.accton.iot.irrigationv1.management.user.DeviceUserInfo;
 import com.accton.iot.irrigationv1.management.user.UserManager;
@@ -118,7 +119,7 @@ public class DeviceListFragment extends ListFragment implements DeviceListAdapte
 
         super.onStart();
 
-        //EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -127,7 +128,7 @@ public class DeviceListFragment extends ListFragment implements DeviceListAdapte
         if(DEBUG)
             Log.d(TAG, "onStop");
 
-        //EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this);
 
         super.onStop();
     }
@@ -378,12 +379,11 @@ public class DeviceListFragment extends ListFragment implements DeviceListAdapte
     //
     //
 
-    // TODO...
-    //@Subscribe(threadMode = ThreadMode.MAIN)
-    //public void onDeviceNumberChanged(DeviceNumberChangedEvent event)
-    //{
-    //    loadDeviceList();
-    //}
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onDeviceNumberChanged(DeviceNumberChangedEvent event)
+    {
+        loadDeviceList();
+    }
 
 
     //

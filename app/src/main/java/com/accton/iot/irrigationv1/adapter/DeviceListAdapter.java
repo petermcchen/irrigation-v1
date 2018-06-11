@@ -88,11 +88,15 @@ public class DeviceListAdapter extends ArrayAdapter<SensorDevice>
         if(device==null)
             return convertView;
 
+        String sno = device.getSensorNo();
         String sid = device.getSensorId();
+        String desc = device.getSensorDesc();
+        String model = device.getSensorModel();
         String gid = device.getGatewayId();
 
-        holder.sensorId.setText(sid);
-        holder.gatewayId.setText(gid);
+        //holder.sensorId.setText(sid);
+        holder.sensorId.setText(sno + "(" + desc + ")"); // TODO. more meaningful.
+        holder.gatewayId.setText("GW: " + gid);
 
         holder.buttonMore.setOnClickListener(new View.OnClickListener()
         {

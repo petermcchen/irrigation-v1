@@ -10,6 +10,7 @@ public class SensorDevice {
     private int sensor_type;
     private String sensor_id;
     private String sensor_desc;
+    private String sensor_model;
 
     public SensorDevice() {
     }
@@ -22,8 +23,8 @@ public class SensorDevice {
         sensor_id = sid;
     }
 
-    public int getSensorNo() {
-        return sensor_no;
+    public String getSensorNo() {
+        return String.valueOf(sensor_no);
     }
 
     public void setSensorNo(int sno) {
@@ -44,5 +45,21 @@ public class SensorDevice {
 
     public void setGatewayId(int gno) {
         gateway_no = gno;
+    }
+
+    public String getSensorDesc() {
+        return sensor_desc;
+    }
+
+    public void setSensorDesc(String desc) {
+        sensor_desc = desc;
+    }
+
+    public String getSensorModel() {
+        return sensor_model;
+    }
+
+    public void setSensorModel(String model) {
+        sensor_model = model;
     }
 }

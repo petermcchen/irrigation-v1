@@ -2,6 +2,7 @@ package com.accton.iot.irrigationv1.management.user;
 
 import android.util.Log;
 
+import com.accton.iot.irrigationv1.event.DeviceNumberChangedEvent;
 import com.accton.iot.irrigationv1.management.device.SensorDevice;
 import com.accton.iot.irrigationv1.management.user.api.UserRestCommand;
 import com.accton.iot.irrigationv1.management.user.response.CreateUserSessionResponse;
@@ -11,6 +12,7 @@ import com.accton.iot.irrigationv1.management.user.response.SensorArrayData;
 import com.accton.iot.irrigationv1.management.user.response.SensorData;
 import com.google.gson.Gson;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -106,8 +108,11 @@ public class UserManager {
         deviceInfo.setSensorId(sid);
         deviceInfo.setGatewayId(gno);
         deviceInfo.setSensorType(type);
+        deviceInfo.setSensorDesc(desc);
 
         mDeviceInfoList.add(deviceInfo);
+
+        EventBus.getDefault().post(new DeviceNumberChangedEvent()); // TODO. Send to DeviceListFragment
     }
 
     private void queryDevices()
@@ -257,7 +262,8 @@ public class UserManager {
                             mSensor.getInt("is_live"),
                             mSensor.getInt("sensor_type"),
                             mSensor.getString("sensor_id"),
-                            mSensor.getString("sensor_desc") );
+                            mSensor.getString("sensor_desc")
+                    );
                 }
             }
         } catch (JSONException e) {

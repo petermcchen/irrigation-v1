@@ -8,3 +8,10 @@
 /build
 /captures
 .externalNativeBuild
+bin/
+gen/
+tmp/
+*.o
+*.o.d
+.idea/
+*.apk
