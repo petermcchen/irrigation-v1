@@ -93,6 +93,7 @@ public class DeviceListAdapter extends ArrayAdapter<SensorDevice>
         String desc = device.getSensorDesc();
         String model = device.getSensorModel();
         String gid = device.getGatewayId();
+        int type = device.getSensorType();
 
         //holder.sensorId.setText(sid);
         holder.sensorId.setText(sno + "(" + desc + ")"); // TODO. more meaningful.
@@ -108,7 +109,25 @@ public class DeviceListAdapter extends ArrayAdapter<SensorDevice>
             }
         });
 
-        holder.sensorType.setImageResource(R.drawable.icon_irrigation_small);
+        switch (type) {
+            case 1:
+            case 2:
+                holder.sensorType.setImageResource(R.drawable.sensor_doorwindoes_icon);
+                break;
+            case 3:
+                holder.sensorType.setImageResource(R.drawable.sensor_motion);
+                break;
+            case 65537:
+                holder.sensorType.setImageResource(R.drawable.sensor_hygrometer);
+                break;
+            case 65538:
+                holder.sensorType.setImageResource(R.drawable.sensor_temperature);
+                break;
+            default:
+                holder.sensorType.setImageResource(R.drawable.icon_irrigation_small);
+                break;
+        }
+        //holder.sensorType.setImageResource(R.drawable.icon_irrigation_small);
 
         return convertView;
     }
